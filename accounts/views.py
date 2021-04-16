@@ -3,6 +3,8 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm, Password
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import RegistrationForm, UpdationForm
+
+from blog.models import BlogModel
 # Create your views here.
 
 def register_view(request):
@@ -29,6 +31,7 @@ def login_view(request):
         password = request.POST['password']
         user = authenticate(username= username, password=password)
         if user:
+            
             login(request, user)
             return redirect('/accounts/home')
         else:
@@ -38,7 +41,8 @@ def login_view(request):
 
 @login_required
 def home_view(request):
-    return render(request, 'home.html')
+    blogs = BlogModel.objects.all()
+    return render(request, 'home.html', {'blogs':blogs})
 
 def logout_view(request):
     logout(request)

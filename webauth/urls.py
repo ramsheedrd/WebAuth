@@ -20,5 +20,7 @@ from accounts.views import home_view
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
+    path('blog/', include('blog.urls')),
     path('', home_view)
 ]
+    
