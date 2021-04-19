@@ -6,7 +6,8 @@ from .views import (
     home_view,
     logout_view,
     update_profile_view,
-    update_password_view
+    update_password_view,
+    upload_profile_image
 )
 
 urlpatterns = [
@@ -16,5 +17,5 @@ urlpatterns = [
     path('logout/', logout_view),
     path('update/', update_profile_view),
     path('password/', update_password_view),
-
+    path('image/', upload_profile_image),
 ]

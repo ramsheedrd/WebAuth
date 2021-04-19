@@ -10,7 +10,9 @@
     {% for blog in blogs %}
     <div class="card p-4 mb-3">
         <h1>{{ blog.title }}</h1>
+        <img style="height: 300px;width: auto;object-fit:cover" src="{{ blog.image.url }}" alt="">
         <p>{{ blog.content }}</p>
+        <img style="width: 50px;height: 50px;object-fit: cover;border-radius: 50%;" src="{{ blog.user.profileimage.image.url }}" alt="">
         <p>{{ blog.user }} - {{ blog.published_at }}
         {% if blog.user == request.user %}
             <a href="/blog/delete/{{ blog.id }}/" class="btn btn-danger">Delete</a>

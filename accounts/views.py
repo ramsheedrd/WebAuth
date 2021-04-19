@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import RegistrationForm, UpdationForm
+from .forms import RegistrationForm, UpdationForm, ProfileImageForm
 
 from blog.models import BlogModel
 # Create your views here.
@@ -49,18 +49,20 @@ def logout_view(request):
     return redirect('/accounts/login')
 
 @login_required
-def update_profile_view(request):
+def upload_profile_image(request):
     if request.method == 'POST':
-        form = UpdationForm(request.POST, instance= request.user)
+        form = ProfileImageForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            obj = form.save(commit=False)
+            obj.user = request.user
+            obj.save()
             return redirect('/accounts/home')
         else:
-            return render(request, 'update_profile.html', {'form': form})
+            return render(request, 'upload_profile_image.html', {'form': form})
 
     else:
-        form = UpdationForm(instance = request.user)
-        return render(request, 'update_profile.html', {'form': form})
+        form = ProfileImageForm()
+        return render(request, 'upload_profile_image.html', {'form': form})
 
 
 @login_required
@@ -75,4 +77,19 @@ def update_password_view(request):
 
     else:
         form = PasswordChangeForm(user = request.user)
+        return render(request, 'update_profile.html', {'form': form})
+
+
+@login_required
+def update_profile_view(request):
+    if request.method == 'POST':
+        form = UpdationForm(request.POST, instance= request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('/accounts/home')
+        else:
+            return render(request, 'update_profile.html', {'form': form})
+
+    else:
+        form = UpdationForm(instance = request.user)
         return render(request, 'update_profile.html', {'form': form})
