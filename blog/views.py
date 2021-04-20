@@ -3,6 +3,19 @@ from django.contrib.auth.decorators import login_required
 
 from .forms import BlogAddForm
 from .models import BlogModel
+from django.views.generic.edit import CreateView
+
+class BlogCreateView(CreateView):
+    model = BlogModel
+    fields = ['title', 'content', 'image']
+    template_name = 'create_blog.html'
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        obj.save()
+
+
 
 # Create your views here.
 @login_required

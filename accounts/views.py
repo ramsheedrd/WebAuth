@@ -5,7 +5,18 @@ from django.contrib.auth.decorators import login_required
 from .forms import RegistrationForm, UpdationForm, ProfileImageForm
 
 from blog.models import BlogModel
+from django.views.generic import FormView, TemplateView, ListView, DetailView
 # Create your views here.
+
+class RegisterView(FormView):
+    form_class = RegistrationForm
+    template_name = 'register.html'
+    success_url = '/accounts/login'
+
+    def form_valid(self, form):
+        form.save()
+        return redirect(self.success_url)
+
 
 def register_view(request):
     if request.user.is_authenticated:
@@ -39,10 +50,25 @@ def login_view(request):
     else:
         return render(request, 'login.html')
 
+
+
 @login_required
 def home_view(request):
     blogs = BlogModel.objects.all()
     return render(request, 'home.html', {'blogs':blogs})
+
+
+class HomeView(ListView):
+    template_name = 'home.html'
+    model = BlogModel
+    context_object_name = 'blogs'
+    paginate_by = 10
+
+class BlogView(DetailView):
+    template_name = 'home.html'
+    model = BlogModel
+    context_object_name = 'blog'
+
 
 def logout_view(request):
     logout(request)
